@@ -1,31 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, Image, FlatList } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-function HomePage({ location }) {
+function AllReminiese() {
   const [isempty, setIsEmpty] = useState(true);
+  const [location, setLocation] = useState([]);
   const [items, setItems] = useState([]);
   // const location = route.params.location;
 
   const noMemory = `Things End but Reminisces Lasts forever...`;
-
   const getlocations = async () => {
     try {
       let tmp = await AsyncStorage.getItem("location");
+      setLocation(JSON.parse(tmp));
+      console.log(location);
     } catch (err) {
       console.log("err", err);
     }
   };
-  const getReminise = async () => {
+  const getReminise = async (loc) => {
     try {
-      const data = JSON.parse(
-        await AsyncStorage.getItem(JSON.stringify(location))
-      );
-      setItems([...data]);
+      const data = JSON.parse(await AsyncStorage.getItem(JSON.stringify(loc)));
+      if (!!data) setItems([...items, ...data]);
     } catch (err) {}
   };
   useEffect(() => {
-    getReminise();
+    getlocations();
+    location.map((x) => getReminise(x));
     if (!!items) {
       setIsEmpty(false);
     }
@@ -56,7 +58,7 @@ function HomePage({ location }) {
   );
 }
 
-export default HomePage;
+export default AllReminiese;
 
 const styles = StyleSheet.create({
   container: {

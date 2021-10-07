@@ -12,33 +12,33 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import AddReminise from "./Components/AddReminise";
 import CameraCapture from "./Components/CameraCapture";
 import * as Location from "expo-location";
+import AllReminiese from "./Components/AllReminiese";
+import About from "./Components/About";
 const Stack = createStackNavigator();
 
 export default function App() {
   const [currLocation, setCurrLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-
+  const getcurrlocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      setErrorMsg("Permission to access location was denied");
+      return;
+    }
+    let loc = await Location.getCurrentPositionAsync({});
+    // console.log(
+    //   "loc",
+    //   loc?.coords?.latitude.toPrecision(4),
+    //   loc?.coords?.longitude.toPrecision(4)
+    // );
+    setCurrLocation([
+      loc?.coords?.latitude.toPrecision(4),
+      loc?.coords?.longitude.toPrecision(4),
+    ]);
+  };
   useEffect(() => {
-    if (!currLocation)
-      (async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") {
-          setErrorMsg("Permission to access location was denied");
-          return;
-        }
-        let loc = await Location.getCurrentPositionAsync({});
-        // console.log(
-        //   "loc",
-        //   loc?.coords?.latitude.toPrecision(4),
-        //   loc?.coords?.longitude.toPrecision(4)
-        // );
-        setCurrLocation([
-          loc?.coords?.latitude.toPrecision(4),
-          loc?.coords?.longitude.toPrecision(4),
-        ]);
-      })();
-    console.log("lo", currLocation);
-  });
+    getcurrlocation();
+  }, []);
   return (
     <SafeAreaProvider style={styles.container}>
       <NavigationContainer ref={navigationRef}>
@@ -55,11 +55,17 @@ export default function App() {
             },
           }}
         >
-          <Stack.Screen name="Reminisce">
+          <Stack.Screen
+            name="Reminisce"
+
+            // initialParams={{ location: currLocation }}
+          >
             {(props) => <HomePage {...props} location={currLocation} />}
           </Stack.Screen>
           <Stack.Screen name="Add" component={AddReminise} />
           <Stack.Screen name="Camera" component={CameraCapture} />
+          <Stack.Screen name="AllReminies" component={AllReminiese} />
+          <Stack.Screen name="About" component={About} />
         </Stack.Navigator>
         <Footer location={currLocation} />
       </NavigationContainer>

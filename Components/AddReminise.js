@@ -26,6 +26,7 @@ function AddReminise({ route, navigation }) {
       ]
     );
   const { location } = route.params;
+  console.log("location", location);
   const [msg, setMsg] = useState("");
   const [submit, setsubmit] = useState(false);
   const [selectedPic, setSelectedPicture] = useState("");

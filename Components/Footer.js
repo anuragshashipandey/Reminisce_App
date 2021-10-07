@@ -27,9 +27,9 @@ export default function ({ location }) {
         <View style={styles.lower}>
           <TouchableOpacity
             style={styles.btn}
-            // onPress={() => {
-            //   RootNavigation.navigate("Every");
-            // }}
+            onPress={() => {
+              RootNavigation.navigate("AllReminies");
+            }}
           >
             <Text style={styles.btn_txt}>Every Reminisce...</Text>
           </TouchableOpacity>
