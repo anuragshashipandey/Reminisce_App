@@ -1,56 +1,78 @@
 import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  ImageBackground,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+} from "react-native";
 
 import * as RootNavigation from "../RootNavigation";
 
-export default function () {
+export default function ({ location }) {
   return (
-    <View style={styles.footer}>
-      <TouchableOpacity
-        style={styles.btn}
-        // onPress={() => {
-        //   RootNavigation.navigate("Add");
-        // }}
-      >
-        <Text>Add</Text>
-      </TouchableOpacity>
-
-      <View style={styles.lower}>
+    <ImageBackground style={{ backgroundColor: "#5316af" }}>
+      <View style={styles.footer}>
         <TouchableOpacity
-          style={styles.btn}
-          // onPress={() => {
-          //   RootNavigation.navigate("Every");
-          // }}
+          style={styles.add_btn}
+          onPress={() => {
+            RootNavigation.navigate("Add", {
+              location: location,
+            });
+          }}
         >
-          <Text>Every Reminisce...</Text>
+          <Text style={styles.btn_txt}>Add</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.btn}
-          // onPress={() => {
-          //   RootNavigation.navigate("About");
-          // }}
-        >
-          <Text>About</Text>
-        </TouchableOpacity>
+        <View style={styles.lower}>
+          <TouchableOpacity
+            style={styles.btn}
+            // onPress={() => {
+            //   RootNavigation.navigate("Every");
+            // }}
+          >
+            <Text style={styles.btn_txt}>Every Reminisce...</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.btn}
+            // onPress={() => {
+            //   RootNavigation.navigate("About");
+            // }}
+          >
+            <Text style={styles.btn_txt}>About Us</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   footer: {
     width: "100%",
-    height: 80,
+    height: 120,
     flexDirection: "column",
+    justifyContent: "space-between",
   },
   lower: {
     height: 40,
     flexDirection: "row",
     alignItems: "flex-start",
-    justifyContent: "center",
+    justifyContent: "space-between",
+    paddingBottom: 20,
+    padding: 10,
+  },
+  add_btn: {
+    padding: 15,
+    textAlign: "center",
+    alignItems: "center",
   },
   btn: {
-    padding: 15,
+    // padding: 20,
+  },
+  btn_txt: {
+    color: "white",
+    fontWeight: "500",
   },
 });
