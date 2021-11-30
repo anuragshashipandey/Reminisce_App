@@ -1,11 +1,12 @@
 import React from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
+// import logo from "../assets/headericon.png";
 
 function Header() {
   return (
     <View style={styles.header}>
-      {/* <Image source={logo} style={{ width: 35, height: 35 }} /> */}
       <View>
+        <Image source={require("../assets/headericon.png")} />
         <Text style={styles.txt}>Reminisce</Text>
       </View>
     </View>
