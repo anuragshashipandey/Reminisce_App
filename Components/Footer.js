@@ -12,9 +12,10 @@ import * as RootNavigation from "../RootNavigation";
 export default function ({ location }) {
   return (
     <ImageBackground style={{ backgroundColor: "#5316af" }}>
-      <View style={styles.footer}>
+      {/* <View style={styles.footer}> */}
+      <View style={styles.lower}>
         <TouchableOpacity
-          style={styles.add_btn}
+          style={styles.btn_txt}
           onPress={() => {
             RootNavigation.navigate("Add", {
               location: location,
@@ -24,25 +25,25 @@ export default function ({ location }) {
           <Text style={styles.btn_txt}>Add</Text>
         </TouchableOpacity>
 
-        <View style={styles.lower}>
-          <TouchableOpacity
-            style={styles.btn}
-            onPress={() => {
-              RootNavigation.navigate("AllReminies");
-            }}
-          >
-            <Text style={styles.btn_txt}>Every Reminisce...</Text>
-          </TouchableOpacity>
+        {/* <View style={styles.lower}> */}
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() => {
+            RootNavigation.navigate("AllReminies");
+          }}
+        >
+          <Text style={styles.btn_txt}>Every Reminisce</Text>
+        </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.btn}
-            // onPress={() => {
-            //   RootNavigation.navigate("About");
-            // }}
-          >
-            <Text style={styles.btn_txt}>About Us</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() => {
+            RootNavigation.navigate("About");
+          }}
+        >
+          <Text style={styles.btn_txt}>About</Text>
+        </TouchableOpacity>
+        {/* </View> */}
       </View>
     </ImageBackground>
   );
@@ -59,7 +60,7 @@ const styles = StyleSheet.create({
     height: 40,
     flexDirection: "row",
     alignItems: "flex-start",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     paddingBottom: 20,
     padding: 10,
   },
@@ -74,5 +75,6 @@ const styles = StyleSheet.create({
   btn_txt: {
     color: "white",
     fontWeight: "500",
+    // paddingLeft: 2,
   },
 });

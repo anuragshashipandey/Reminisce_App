@@ -17,7 +17,7 @@ import About from "./Components/About";
 const Stack = createStackNavigator();
 
 export default function App() {
-  const [currLocation, setCurrLocation] = useState(null);
+  let [currLocation, setCurrLocation] = useState([]);
   const [errorMsg, setErrorMsg] = useState(null);
   const getcurrlocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -26,18 +26,18 @@ export default function App() {
       return;
     }
     let loc = await Location.getCurrentPositionAsync({});
-    // console.log(
-    //   "loc",
-    //   loc?.coords?.latitude.toPrecision(4),
-    //   loc?.coords?.longitude.toPrecision(4)
-    // );
-    setCurrLocation([
+
+    currLocation = [
       loc?.coords?.latitude.toPrecision(4),
       loc?.coords?.longitude.toPrecision(4),
-    ]);
+    ];
+    // console.log("currlocation", currLocation);
+
+    setCurrLocation([...currLocation]);
   };
   useEffect(() => {
     getcurrlocation();
+    // console.log("currlocation11", currLocation);
   }, []);
   return (
     <SafeAreaProvider style={styles.container}>

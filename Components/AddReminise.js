@@ -38,7 +38,6 @@ function AddReminise({ route, navigation }) {
         let jsonvalue = await AsyncStorage.getItem(JSON.stringify(location));
         let value = [];
         if (!!jsonvalue) value = JSON.parse(jsonvalue);
-        // console.log(msg);
         value = [...value, [selectedPic, msg]];
         jsonvalue = JSON.stringify(value);
         await AsyncStorage.setItem(JSON.stringify(location), jsonvalue);
@@ -46,7 +45,7 @@ function AddReminise({ route, navigation }) {
         setsubmit(!submit);
         jsonvalue = await AsyncStorage.getItem("location");
         value = JSON.parse(jsonvalue);
-        value = [...value, [...location]];
+        value = [[...location], ...value];
         await AsyncStorage.setItem("location", JSON.stringify(value));
       } catch (err) {
         console.log(err);

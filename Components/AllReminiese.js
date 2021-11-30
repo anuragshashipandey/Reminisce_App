@@ -5,15 +5,15 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function AllReminiese() {
   const [isempty, setIsEmpty] = useState(true);
-  const [location, setLocation] = useState([]);
-  const [items, setItems] = useState([]);
-  // const location = route.params.location;
+  let [location, setLocation] = useState([]);
+  let [items, setItems] = useState([]);
 
   const noMemory = `Things End but Reminisces Lasts forever...`;
   const getlocations = async () => {
     try {
       let tmp = await AsyncStorage.getItem("location");
-      setLocation(JSON.parse(tmp));
+      location = [...JSON.parse(tmp)];
+      setLocation(location);
       console.log(location);
     } catch (err) {
       console.log("err", err);
@@ -22,17 +22,20 @@ function AllReminiese() {
   const getReminise = async (loc) => {
     try {
       const data = JSON.parse(await AsyncStorage.getItem(JSON.stringify(loc)));
-      if (!!data) setItems([...items, ...data]);
+      setItems([...items, ...data]);
     } catch (err) {}
   };
+
   useEffect(() => {
     getlocations();
-    location.map((x) => getReminise(x));
-    if (!!items) {
-      setIsEmpty(false);
-    }
-    console.log("items", items);
   }, []);
+  useEffect(() => {
+    location.map((x) => getReminise(x));
+    console.log("items", items);
+  }, [location]);
+  useEffect(() => {
+    if (items !== []) setIsEmpty(false);
+  }, [items]);
 
   const listItem = ({ item }) => {
     return (
@@ -62,25 +65,34 @@ export default AllReminiese;
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: "#fff",
-    alignItems: "center",
     justifyContent: "center",
   },
   title: {
     padding: 10,
+    fontSize: 30,
+    fontWeight: "bold",
+    borderRadius: 15,
   },
   txt: {
+    textAlign: "center",
     color: "black",
+    fontSize: 50,
   },
   thumbnail: {
-    height: 200,
+    height: 500,
     width: "98%",
-    // fontWeight: "bold",
+    borderRadius: 15,
   },
   post: {
     paddingTop: 15,
-    paddingBottom: 25,
+    paddingBottom: 5,
     borderBottomColor: "black",
-    borderBottomWidth: 1,
+    borderWidth: 1,
+    borderRadius: 15,
+    margin: 2,
+    width: "98%",
+    alignItems: "center",
   },
 });
