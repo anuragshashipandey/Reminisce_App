@@ -26,7 +26,7 @@ function AddReminise({ route, navigation }) {
       ]
     );
   const { location } = route.params;
-  console.log("location", location);
+
   const [msg, setMsg] = useState("");
   const [submit, setsubmit] = useState(false);
   const [selectedPic, setSelectedPicture] = useState("");
@@ -41,7 +41,7 @@ function AddReminise({ route, navigation }) {
         value = [...value, [selectedPic, msg]];
         jsonvalue = JSON.stringify(value);
         await AsyncStorage.setItem(JSON.stringify(location), jsonvalue);
-        console.log({ value: value });
+
         setsubmit(!submit);
         jsonvalue = await AsyncStorage.getItem("location");
         value = JSON.parse(jsonvalue);
@@ -52,6 +52,9 @@ function AddReminise({ route, navigation }) {
       }
     }
   };
+  useEffect(() => {
+    setSelectedPicture(route.params.clickedPic);
+  }, [route.params.clickedPic]);
   useEffect(() => {
     setSelectedPicture("");
     setMsg("");
@@ -64,25 +67,17 @@ function AddReminise({ route, navigation }) {
       return;
     }
     let pickerResult = await ImagePicker.launchImageLibraryAsync();
-    console.log(pickerResult?.uri);
     if (!!pickerResult) setSelectedPicture(pickerResult?.uri);
     else setSelectedPicture("");
   };
   return (
     <View style={styles.container}>
-      {selectedPic === "" ? (
-        <></>
-      ) : (
-        <View>
-          <Image style={styles.story_img} source={{ uri: selectedPic }} />
-        </View>
-      )}
       <View style={styles.img_btn}>
         <TouchableOpacity
           style={styles.btn}
           onPress={() => {
             navigation.navigate("Camera", {
-              setSelectedPicture: setSelectedPicture,
+              location: location,
             });
           }}
         >
@@ -106,6 +101,13 @@ function AddReminise({ route, navigation }) {
       <TouchableOpacity style={styles.btn} onPress={savedata}>
         <Text style={styles.btn_txt}>Make it forever</Text>
       </TouchableOpacity>
+      {selectedPic === "" ? (
+        <></>
+      ) : (
+        <View>
+          <Image style={styles.story_img} source={{ uri: selectedPic }} />
+        </View>
+      )}
     </View>
   );
 }
@@ -141,6 +143,7 @@ const styles = StyleSheet.create({
     height: 300,
     width: 300,
     resizeMode: "contain",
+    marginTop: 15,
   },
 
   btn: {

@@ -31,13 +31,11 @@ export default function App() {
       loc?.coords?.latitude.toPrecision(4),
       loc?.coords?.longitude.toPrecision(4),
     ];
-    // console.log("currlocation", currLocation);
 
     setCurrLocation([...currLocation]);
   };
   useEffect(() => {
     getcurrlocation();
-    // console.log("currlocation11", currLocation);
   }, []);
   return (
     <SafeAreaProvider style={styles.container}>
@@ -57,7 +55,6 @@ export default function App() {
         >
           <Stack.Screen
             name="Reminisce"
-
             // initialParams={{ location: currLocation }}
           >
             {(props) => <HomePage {...props} location={currLocation} />}

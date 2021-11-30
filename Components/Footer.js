@@ -19,6 +19,7 @@ export default function ({ location }) {
           onPress={() => {
             RootNavigation.navigate("Add", {
               location: location,
+              clickedPic: "",
             });
           }}
         >

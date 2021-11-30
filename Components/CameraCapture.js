@@ -8,7 +8,8 @@ export default function CameraCapture({ route, navigation }) {
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [pic, setPic] = useState(null);
   const cam = useRef(null);
-  const { setSelectedPicture } = route.params;
+  const { location } = route.params;
+
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestPermissionsAsync();
@@ -45,13 +46,12 @@ export default function CameraCapture({ route, navigation }) {
               let picture = await cam.current.takePictureAsync();
               const asset = await MediaLibrary.createAssetAsync(picture.uri);
               console.log(asset);
-              setSelectedPicture(asset.uri);
-              // if (picture) {
-              //   setPic(picture);
-              //   setSelectedPicture(picture);
-              navigation.goBack();
-              // }
+
               console.log(picture?.uri);
+              navigation.navigate("Add", {
+                location: location,
+                clickedPic: asset.uri,
+              });
             }}
           >
             <Text style={styles.text}> Click </Text>

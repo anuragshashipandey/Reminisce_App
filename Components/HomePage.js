@@ -9,7 +9,6 @@ function HomePage({ location }) {
 
   const getReminise = async () => {
     try {
-      // console.log("location", location);
       const data = JSON.parse(
         await AsyncStorage.getItem(JSON.stringify(location))
       );
@@ -59,7 +58,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   title: {
-    padding: 10,
+    padding: 5,
     fontSize: 30,
     fontWeight: "bold",
     borderRadius: 15,
@@ -81,6 +80,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 15,
     margin: 2,
+    marginBottom: 10,
     width: "98%",
     alignItems: "center",
   },
