@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, Image, FlatList } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LinearGradient } from "expo-linear-gradient";
 
 function AllReminiese() {
   const [isempty, setIsEmpty] = useState(true);
@@ -12,9 +12,10 @@ function AllReminiese() {
   const getlocations = async () => {
     try {
       let tmp = await AsyncStorage.getItem("location");
-      location = [...JSON.parse(tmp)];
-      setLocation(location);
-      console.log(location);
+      if (tmp !== null) {
+        location = [...JSON.parse(tmp)];
+        setLocation(location);
+      }
     } catch (err) {
       console.log("err", err);
     }
@@ -22,7 +23,10 @@ function AllReminiese() {
   const getReminise = async (loc) => {
     try {
       const data = JSON.parse(await AsyncStorage.getItem(JSON.stringify(loc)));
-      setItems([...items, ...data]);
+      if (data !== null) {
+        items = [...items, [...loc, "loc"], ...data];
+        setItems([...items]);
+      }
     } catch (err) {}
   };
 
@@ -31,7 +35,6 @@ function AllReminiese() {
   }, []);
   useEffect(() => {
     location.map((x) => getReminise(x));
-    console.log("items", items);
   }, [location]);
   useEffect(() => {
     if (items !== []) setIsEmpty(false);
@@ -39,24 +42,42 @@ function AllReminiese() {
 
   const listItem = ({ item }) => {
     return (
-      <View style={styles.post}>
-        <Text style={styles.title}>{item[1]}</Text>
-        <Image style={styles.thumbnail} source={{ uri: item[0] }} />
+      <View>
+        {item.length === 3 ? (
+          <View style={styles.post}>
+            <Text style={styles.title}>
+              {item[0]} {item[1]}
+            </Text>
+            <Text style={styles.descrption}>
+              Identify the place from the above Geo Co-ords!!
+            </Text>
+          </View>
+        ) : (
+          <View style={styles.post}>
+            <Text style={styles.title}>{item[1]}</Text>
+            <Image style={styles.thumbnail} source={{ uri: item[0] }} />
+          </View>
+        )}
       </View>
     );
   };
 
   return (
     <View style={styles.container}>
-      {isempty ? (
-        <Text style={styles.txt}>{noMemory}</Text>
-      ) : (
-        <FlatList
-          data={items}
-          renderItem={listItem}
-          keyExtractor={(item) => item[0]}
-        />
-      )}
+      <LinearGradient
+        colors={["#fff", "#4c669f", "#192f6a", "black"]}
+        style={styles.background}
+      >
+        {isempty ? (
+          <Text style={styles.txt}>{noMemory}</Text>
+        ) : (
+          <FlatList
+            data={items}
+            renderItem={listItem}
+            keyExtractor={(item) => item[0]}
+          />
+        )}
+      </LinearGradient>
     </View>
   );
 }
@@ -75,9 +96,16 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     borderRadius: 15,
   },
+  descrption: {
+    padding: 10,
+    fontSize: 15,
+    fontWeight: "bold",
+    borderRadius: 15,
+    textAlign: "center",
+  },
   txt: {
     textAlign: "center",
-    color: "black",
+    color: "#fff",
     fontSize: 50,
   },
   thumbnail: {
@@ -88,11 +116,15 @@ const styles = StyleSheet.create({
   post: {
     paddingTop: 15,
     paddingBottom: 5,
-    borderBottomColor: "black",
-    borderWidth: 1,
-    borderRadius: 15,
     margin: 2,
     width: "98%",
     alignItems: "center",
+  },
+  background: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    height: 700,
   },
 });

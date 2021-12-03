@@ -10,6 +10,7 @@ import {
 import { TextInput } from "react-native-gesture-handler";
 import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LinearGradient } from "expo-linear-gradient";
 
 function AddReminise({ route, navigation }) {
   const createTwoButtonAlert = () =>
@@ -37,16 +38,19 @@ function AddReminise({ route, navigation }) {
       try {
         let jsonvalue = await AsyncStorage.getItem(JSON.stringify(location));
         let value = [];
-        if (!!jsonvalue) value = JSON.parse(jsonvalue);
-        value = [...value, [selectedPic, msg]];
+        value = JSON.parse(jsonvalue) || [];
+        value = [[selectedPic, msg], ...value];
         jsonvalue = JSON.stringify(value);
         await AsyncStorage.setItem(JSON.stringify(location), jsonvalue);
 
         setsubmit(!submit);
         jsonvalue = await AsyncStorage.getItem("location");
-        value = JSON.parse(jsonvalue);
+        value = JSON.parse(jsonvalue) || [];
         value = [[...location], ...value];
         await AsyncStorage.setItem("location", JSON.stringify(value));
+        navigation.navigate("Reminisce", {
+          recentAdd: [selectedPic, msg],
+        });
       } catch (err) {
         console.log(err);
       }
@@ -72,42 +76,48 @@ function AddReminise({ route, navigation }) {
   };
   return (
     <View style={styles.container}>
-      <View style={styles.img_btn}>
-        <TouchableOpacity
-          style={styles.btn}
-          onPress={() => {
-            navigation.navigate("Camera", {
-              location: location,
-            });
-          }}
-        >
-          <Text style={styles.btn_txt}>Open Camera</Text>
-        </TouchableOpacity>
-        <Text style={styles.label}>or</Text>
-        <TouchableOpacity style={styles.btn} onPress={openImagePickerAsync}>
-          <Text style={styles.btn_txt}>Pick an image</Text>
-        </TouchableOpacity>
-      </View>
-      <Text style={styles.label}>
-        Words make your memories more beautiful...
-      </Text>
-      <TextInput
-        style={styles.multi}
-        value={msg}
-        onChangeText={(text) => setMsg(text)}
-        multiline
-        numberOfLines={4}
-      />
-      <TouchableOpacity style={styles.btn} onPress={savedata}>
-        <Text style={styles.btn_txt}>Make it forever</Text>
-      </TouchableOpacity>
-      {selectedPic === "" ? (
-        <></>
-      ) : (
-        <View>
-          <Image style={styles.story_img} source={{ uri: selectedPic }} />
+      <LinearGradient
+        colors={["#fff", "#4c669f", "#192f6a", "black"]}
+        style={styles.background}
+      >
+        <View style={styles.img_btn}>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => {
+              navigation.navigate("Camera", {
+                location: location,
+              });
+            }}
+          >
+            <Text style={styles.btn_txt}>Open Camera</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.btn} onPress={openImagePickerAsync}>
+            <Text style={styles.btn_txt}>Pick an image</Text>
+          </TouchableOpacity>
         </View>
-      )}
+        <Text style={styles.label}>
+          Words make your memories more beautiful...
+        </Text>
+        <View style={styles.multi_input}>
+          <TextInput
+            style={styles.multi}
+            value={msg}
+            onChangeText={(text) => setMsg(text)}
+            multiline
+            numberOfLines={4}
+          />
+        </View>
+        <TouchableOpacity style={styles.btn} onPress={savedata}>
+          <Text style={styles.btn_txt}>Make it forever</Text>
+        </TouchableOpacity>
+        {selectedPic === "" ? (
+          <></>
+        ) : (
+          <View>
+            <Image style={styles.story_img} source={{ uri: selectedPic }} />
+          </View>
+        )}
+      </LinearGradient>
     </View>
   );
 }
@@ -139,6 +149,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     width: 300,
   },
+  multi_input: {
+    alignItems: "center",
+  },
   story_img: {
     height: 300,
     width: 300,
@@ -151,12 +164,18 @@ const styles = StyleSheet.create({
     marginRight: "auto",
     marginTop: 10,
     padding: 2,
-    borderWidth: 1,
-    borderColor: "#5316af",
+    borderWidth: 0,
     borderRadius: 5,
-    backgroundColor: "#5316af",
+    backgroundColor: "transparent",
   },
   btn_txt: {
-    color: "#fff",
+    color: "black",
+  },
+  background: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    height: 700,
   },
 });

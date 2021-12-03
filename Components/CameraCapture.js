@@ -6,13 +6,14 @@ import * as MediaLibrary from "expo-media-library";
 export default function CameraCapture({ route, navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
-  const [pic, setPic] = useState(null);
+
   const cam = useRef(null);
   const { location } = route.params;
 
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestPermissionsAsync();
+      const { mediaStatus } = await MediaLibrary.requestPermissionsAsync();
       setHasPermission(status === "granted");
     })();
   }, []);
@@ -25,7 +26,6 @@ export default function CameraCapture({ route, navigation }) {
   }
   return (
     <View style={styles.container}>
-      {/* {!pic ? ( */}
       <Camera style={styles.camera} type={type} ref={cam}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
@@ -58,9 +58,6 @@ export default function CameraCapture({ route, navigation }) {
           </TouchableOpacity>
         </View>
       </Camera>
-      {/* ) : (
-        <Image style={styles.story_img} source={{ uri: pic?.uri }} />
-      )} */}
     </View>
   );
 }

@@ -1,9 +1,7 @@
 import "react-native-gesture-handler";
-import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, BackHandler, Alert, View } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
-import Header from "./Components/Header";
 import { NavigationContainer } from "@react-navigation/native";
 import { navigationRef } from "./RootNavigation";
 import HomePage from "./Components/HomePage";
@@ -14,19 +12,39 @@ import CameraCapture from "./Components/CameraCapture";
 import * as Location from "expo-location";
 import AllReminiese from "./Components/AllReminiese";
 import About from "./Components/About";
+
 const Stack = createStackNavigator();
 
 export default function App() {
   let [currLocation, setCurrLocation] = useState([]);
   const [errorMsg, setErrorMsg] = useState(null);
+  const createTwoButtonAlert = () =>
+    Alert.alert("Location Denied", "Give Permission for Location", [
+      {
+        text: "Exit",
+        onPress: () => BackHandler.exitApp(),
+        style: "cancel",
+      },
+      { text: "OK", onPress: () => getcurrlocation() },
+    ]);
   const getcurrlocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
+
     if (status !== "granted") {
-      setErrorMsg("Permission to access location was denied");
+      createTwoButtonAlert();
       return;
     }
-    let loc = await Location.getCurrentPositionAsync({});
-
+    let loc = await Location.getLastKnownPositionAsync({});
+    if (loc === null) {
+      await Location.getCurrentPositionAsync({})
+        .then((res) => {
+          loc = res;
+        })
+        .catch((err) => {
+          console.log(err);
+          createTwoButtonAlert();
+        });
+    }
     currLocation = [
       loc?.coords?.latitude.toPrecision(4),
       loc?.coords?.longitude.toPrecision(4),
@@ -45,19 +63,19 @@ export default function App() {
           screenOptions={{
             headerMode: "screen",
             headerStyle: {
-              backgroundColor: "#5316af",
+              backgroundColor: "#FEFEFF",
+              borderBottomWidth: 0,
             },
-            headerTintColor: "#fff",
+            headerTintColor: "black",
             headerTitleStyle: {
               fontWeight: "bold",
             },
           }}
         >
-          <Stack.Screen
-            name="Reminisce"
-            // initialParams={{ location: currLocation }}
-          >
-            {(props) => <HomePage {...props} location={currLocation} />}
+          <Stack.Screen name="Reminisce">
+            {(props) => (
+              <HomePage {...props} location={currLocation} recentAdd={[]} />
+            )}
           </Stack.Screen>
           <Stack.Screen name="Add" component={AddReminise} />
           <Stack.Screen name="Camera" component={CameraCapture} />

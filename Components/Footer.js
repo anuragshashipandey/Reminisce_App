@@ -11,7 +11,7 @@ import * as RootNavigation from "../RootNavigation";
 
 export default function ({ location }) {
   return (
-    <ImageBackground style={{ backgroundColor: "#5316af" }}>
+    <ImageBackground style={{ backgroundColor: "black" }}>
       {/* <View style={styles.footer}> */}
       <View style={styles.lower}>
         <TouchableOpacity
